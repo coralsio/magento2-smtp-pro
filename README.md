@@ -1,6 +1,6 @@
-# Corals SMTP Pro for Magento 2
+# Corals SMTP Pro for Magento 2 - 100% FREE
 
-![Corals SMTP Pro Banner](https://via.placeholder.com/1200x400/4A90E2/FFFFFF?text=Corals+SMTP+Pro+-+Enterprise+Email+Solution)
+![Corals SMTP Pro Banner](https://via.placeholder.com/1200x400/4A90E2/FFFFFF?text=Corals+SMTP+Pro+-+100%25+FREE+Enterprise+Email+Solution)
 
 <div align="center">
 
@@ -139,17 +139,33 @@
 
 ### Installation Methods
 
-#### Method 1: Composer Installation (Recommended)
+#### Method 1: GitHub Installation (Recommended for Free Version)
+
+1. **Clone the repository to your Magento installation:**
+```bash
+cd app/code
+mkdir -p Corals
+cd Corals
+git clone https://github.com/corals/smtp-pro.git SMTP
+```
+
+2. **Alternative: Download the ZIP file:**
+```bash
+wget https://github.com/corals/smtp-pro/archive/main.zip
+unzip main.zip -d app/code/Corals/SMTP
+```
+
+#### Method 2: Composer Installation
 
 1. **Navigate to your Magento root directory:**
 ```bash
 cd /path/to/magento2
 ```
 
-2. **Require the module via Composer:**
+2. **Add the free repository:**
 ```bash
+composer config repositories.corals-smtp vcs https://github.com/corals/smtp-pro.git
 composer require corals/smtp
-```
 
 3. **Enable the module:**
 ```bash
@@ -179,12 +195,12 @@ php bin/magento cache:flush
 
 ![Installation Success](https://via.placeholder.com/800x200/4CAF50/FFFFFF?text=Installation+Successful!)
 
-#### Method 2: Manual Installation
+#### Method 3: Manual Installation
 
-1. **Download the module package**
+1. **Download the FREE module from our website or GitHub**
 2. **Extract to your Magento installation:**
 ```bash
-unzip corals-smtp-pro.zip -d app/code/Corals/SMTP
+unzip corals-smtp-pro-free.zip -d app/code/Corals/SMTP
 ```
 
 3. **Run installation commands:**
@@ -556,30 +572,32 @@ View debug logs:
 tail -f var/log/corals_smtp_debug.log
 ```
 
-## 💰 Pricing & Comparison
+## 🆚 Why We're Better Than Paid Alternatives
 
-### Corals SMTP Pro vs Competitors
+### Corals SMTP Pro (FREE) vs Paid Competitors
 
 | Feature | Corals SMTP Pro | Mageplaza SMTP | Amasty SMTP | MageMail |
 |---------|-----------------|-----------------|--------------|----------|
-| **Price** | $299 (one-time) | $199/year | $249/year | $149/year |
+| **Price** | **FREE** 🎉 | $199/year | $249/year | $149/year |
 | **Providers** | 25+ | 21 | 15 | 10 |
 | **API Support** | ✅ Full | ❌ Limited | ❌ Limited | ❌ No |
 | **DKIM/SPF/DMARC** | ✅ Built-in | ❌ Manual | ❌ Manual | ❌ No |
 | **Email Queue** | ✅ Advanced | ✅ Basic | ✅ Basic | ❌ No |
 | **Real-time Tracking** | ✅ Yes | ❌ No | ✅ Limited | ❌ No |
 | **Failover** | ✅ Automatic | ❌ No | ❌ No | ❌ No |
-| **Updates** | ✅ Lifetime | ✅ 1 year | ✅ 1 year | ✅ 1 year |
-| **Support** | ✅ 24/7 | ✅ Business hours | ✅ Business hours | ❌ Email only |
+| **Source Code** | ✅ Open Source | ❌ Encrypted | ❌ Encrypted | ❌ Encrypted |
+| **Updates** | ✅ Forever Free | ✅ 1 year | ✅ 1 year | ✅ 1 year |
+| **Community** | ✅ Active | ✅ Limited | ✅ Limited | ❌ None |
 | **Performance** | ⚡ 3x faster | Standard | Standard | Slow |
 
-### Return on Investment
+### Value Proposition
 
-- **Increased Deliverability**: 40% improvement in inbox placement
-- **Reduced Bounce Rate**: 75% reduction in bounced emails
-- **Time Savings**: 10+ hours/month on email management
-- **Cost Savings**: No monthly fees unlike SaaS solutions
-- **Revenue Impact**: 25% increase in transactional email conversions
+**Why pay when you can get better for FREE?**
+- **Save $149-$299/year** compared to paid alternatives
+- **No licensing restrictions** - use on unlimited domains
+- **Full source code access** - customize as needed
+- **Community-driven development** - features you actually need
+- **No vendor lock-in** - you own your email infrastructure
 
 ## 🌟 About Corals Technology
 
@@ -619,12 +637,12 @@ Corals Technology is a leading provider of innovative e-commerce solutions, spec
 
 ### Why Choose Corals?
 
-1. **Proven Track Record**: 10+ years serving the Magento community
+1. **Community First**: We believe in giving back to the Magento community
 2. **Expert Team**: 50+ certified Magento developers
-3. **Global Reach**: Customers in 150+ countries
-4. **Continuous Innovation**: Monthly updates and new features
+3. **Global Impact**: Used in 150+ countries worldwide
+4. **Continuous Innovation**: Regular updates and new features
 5. **Security First**: Regular security audits and updates
-6. **Fair Pricing**: No hidden fees or recurring charges
+6. **100% Free**: No hidden fees, no premium version, truly free
 
 ## 🕊️ Our Commitment to Peace & Social Responsibility
 
@@ -661,60 +679,57 @@ As part of our commitment to human rights and dignity for all people, we:
 
 ### Community Programs
 - **Open Source Friday**: Developers contribute to open-source projects
-- **Student Program**: Free licenses for educational institutions
-- **Startup Support**: Discounted licenses for new businesses
-- **Non-Profit Initiative**: 50% discount for registered charities
+- **Student Program**: Free resources and mentorship for students
+- **Startup Support**: Free consultation and best practices guide
+- **Non-Profit Initiative**: Priority support and custom features
 
-## 💼 Special Offers & Promotions
+## 🎁 How You Can Support Us
 
-### 🎁 Current Promotions
+### 🌟 Love Our Free Module?
 
-#### New Customer Special
-- **25% OFF** your first purchase
-- **Promo Code**: `WELCOME25`
-- Valid until: December 31, 2024
+While Corals SMTP Pro is completely free, here's how you can support our mission:
 
-#### Bundle Deals
-| Bundle | Products | Regular Price | Bundle Price | Savings |
-|--------|----------|--------------|--------------|---------|
-| **Starter Pack** | SMTP Pro + SEO Suite | $598 | $449 | $149 (25%) |
-| **Growth Pack** | SMTP + SEO + Security | $897 | $599 | $298 (33%) |
-| **Enterprise Suite** | All 8 Extensions | $2,392 | $1,499 | $893 (37%) |
+#### Contribute to the Community
+- ⭐ **Star our GitHub repository** - Show your appreciation
+- 🐛 **Report bugs** - Help us improve the module
+- 💡 **Suggest features** - Share your ideas
+- 🔧 **Submit pull requests** - Contribute code improvements
+- 📝 **Write reviews** - Help others discover our module
+- 🌍 **Share with others** - Spread the word about free alternatives
 
-#### Seasonal Offers
-- **Black Friday**: 40% off everything (November)
-- **Cyber Monday**: Buy 2 Get 1 Free (November)
-- **New Year**: 30% off annual plans (January)
-- **Summer Sale**: 25% off bundles (July)
+#### Support Our Humanitarian Work
+- 🕊️ **Donate to our Palestine fund** - 100% goes to humanitarian aid
+- 🌱 **Join our tree planting initiative** - One tree per download
+- 💙 **Volunteer** - Help with documentation or translations
+- 🤝 **Partner with us** - Collaborate on social impact projects
 
-### 🏢 Enterprise Solutions
+### 🏢 Professional Services
 
-**Custom packages for large organizations:**
-- Unlimited site licenses
-- Priority support with SLA
-- Custom development services
-- Dedicated account manager
-- On-premise deployment options
-- White-label solutions
+Need help? We offer affordable professional services:
+- **Installation assistance** - Get up and running quickly
+- **Custom development** - Tailored features for your needs
+- **Performance optimization** - Make your emails faster
+- **Security audits** - Ensure your configuration is secure
+- **Training sessions** - Learn to maximize the module
 
-**Contact our enterprise team**: enterprise@corals.io
+**Contact us**: services@corals.io
 
-### 🎓 Special Programs
+### 🎓 Free Programs
 
-#### Educational Discount
-- 70% off for accredited institutions
-- Free licenses for computer science programs
-- Training materials and documentation
+#### For Education
+- **Free training materials** for schools and universities
+- **Student mentorship program**
+- **Hackathon sponsorships**
 
-#### Non-Profit Discount
-- 50% off for registered 501(c)(3) organizations
-- Free setup assistance
-- Priority support
+#### For Non-Profits
+- **Free setup and configuration**
+- **Priority community support**
+- **Custom features on request**
 
-#### Startup Program
-- 40% off for companies < 2 years old
-- Payment plans available
-- Growth consulting included
+#### For Startups
+- **Free consultation** on email best practices
+- **Growth hacking tips**
+- **Community spotlight features**
 
 ## 📞 Support & Contact
 
@@ -727,13 +742,13 @@ As part of our commitment to human rights and dignity for all people, we:
 - **Emergency Hotline**: +1 (888) 267-2571 (Critical issues only)
 - **Support Portal**: [support.corals.io](https://support.corals.io)
 
-#### Support Tiers
-| Tier | Response Time | Channels | Price |
+#### Support Options
+| Type | Response Time | Channels | Cost |
 |------|--------------|----------|-------|
-| **Basic** | 24 hours | Email | Included |
-| **Priority** | 2 hours | Email, Chat | $99/year |
-| **Premium** | 30 minutes | All channels | $299/year |
-| **Enterprise** | 15 minutes | Dedicated team | Custom |
+| **Community** | Best effort | Forum, GitHub | FREE |
+| **Documentation** | Self-service | Docs, Videos | FREE |
+| **Professional** | 24 hours | Email | $50/incident |
+| **Custom Development** | By agreement | All channels | Quote-based |
 
 ### 📚 Resources
 
@@ -782,7 +797,7 @@ United States
 
 ### Quick Start Checklist
 
-- [ ] Purchase license from [corals.io/smtp-pro](https://corals.io/smtp-pro)
+- [ ] Download FREE from [GitHub](https://github.com/corals/smtp-pro) or [corals.io](https://corals.io/smtp-pro)
 - [ ] Download and install the extension
 - [ ] Configure your email provider
 - [ ] Set up DKIM/SPF/DMARC
@@ -801,12 +816,12 @@ United States
 ## 📄 Legal Information
 
 ### License Agreement
-- Single domain license
-- Unlimited subdomains
-- Lifetime updates
-- Source code included
-- Modification allowed
-- Redistribution prohibited
+- **MIT License** - Use freely in any project
+- **Unlimited domains** - No restrictions
+- **Free forever** - No future charges
+- **Full source code** - Complete transparency
+- **Modification allowed** - Customize as needed
+- **Redistribution allowed** - Share with attribution
 
 ### Terms & Conditions
 Full terms available at [corals.io/terms](https://corals.io/terms)
@@ -814,10 +829,11 @@ Full terms available at [corals.io/terms](https://corals.io/terms)
 ### Privacy Policy
 We respect your privacy. Read our policy at [corals.io/privacy](https://corals.io/privacy)
 
-### Refund Policy
-- 30-day money-back guarantee
-- No questions asked
-- Full refund minus processing fees
+### Our Promise
+- **Free forever** - This module will always be free
+- **No ads** - Clean, professional experience
+- **No data collection** - Your privacy matters
+- **Open development** - Transparent roadmap
 
 ---
 
