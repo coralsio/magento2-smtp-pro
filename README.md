@@ -1,6 +1,6 @@
 # Corals SMTP Pro for Magento 2 - 100% FREE
 
-![Corals SMTP Pro Banner](https://via.placeholder.com/1200x400/4A90E2/FFFFFF?text=Corals+SMTP+Pro+-+100%25+FREE+Enterprise+Email+Solution)
+![Corals SMTP Pro Banner](screenshots/dashboard.png)
 
 <div align="center">
 
@@ -30,7 +30,30 @@
 
 **Corals SMTP Pro** is a **100% FREE**, advanced and feature-rich SMTP extension for Magento 2, offering enterprise-grade email delivery with unmatched reliability and comprehensive tracking. Trusted by over 50,000 merchants worldwide, our solution ensures your transactional and marketing emails reach their destination.
 
-![Dashboard Overview](https://via.placeholder.com/1200x600/4A90E2/FFFFFF?text=Email+Analytics+Dashboard)
+<div align="center">
+<table>
+<tr>
+<td width="50%">
+<img src="screenshots/dashboard.png" alt="Dashboard" />
+<b>Analytics Dashboard</b>
+</td>
+<td width="50%">
+<img src="screenshots/configuration.png" alt="Configuration" />
+<b>Easy Configuration</b>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="screenshots/logging.png" alt="Email Logs" />
+<b>Detailed Logging</b>
+</td>
+<td width="50%">
+<img src="screenshots/test-email.png" alt="Test Email" />
+<b>Email Testing</b>
+</td>
+</tr>
+</table>
+</div>
 
 ### Why Choose Corals SMTP Pro?
 
@@ -47,7 +70,7 @@
 
 ### 📧 Email Management System
 
-![Email Management](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=Email+Queue+Management)
+![Email Management](screenshots/logging.png)
 
 #### Core Features:
 - **Smart Queue System**: Automatically queues and processes emails based on priority
@@ -59,7 +82,7 @@
 
 ### 🔐 Enterprise Security Features
 
-![Security Features](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=Advanced+Security+Dashboard)
+![Security Features](screenshots/configuration.png)
 
 - **DKIM Signing**: 
   - Automatic key generation (1024/2048 bit)
@@ -85,7 +108,7 @@
 
 ### 📊 Advanced Analytics & Tracking
 
-![Analytics Dashboard](https://via.placeholder.com/1200x600/4A90E2/FFFFFF?text=Real-time+Email+Analytics)
+![Analytics Dashboard](screenshots/dashboard.png)
 
 #### Tracking Capabilities:
 - **Email Opens**: Track when and how many times emails are opened
@@ -101,7 +124,7 @@
 
 ### ⚡ Performance Optimization
 
-![Performance Metrics](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=Performance+Optimization)
+![Performance Metrics](screenshots/dashboard.png)
 
 - **Connection Pooling**: Reuse SMTP connections for better performance
 - **Parallel Processing**: Send multiple emails simultaneously
@@ -112,21 +135,25 @@
 
 ## 📸 Screenshots
 
-### Admin Configuration Panel
-![Admin Panel](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Admin+Configuration+Panel)
-*Easy-to-use admin interface with intuitive controls*
+<div align="center">
 
-### Email Logs & Tracking
-![Email Logs](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Detailed+Email+Logs)
-*Comprehensive logging with search and filter capabilities*
+### 📊 Analytics Dashboard
+![Dashboard](screenshots/dashboard.png)
+*Real-time email analytics and performance metrics - track deliveries, opens, clicks, and bounces*
 
-### Test Email Interface
-![Test Email](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Test+Email+Interface)
-*One-click testing with detailed debug information*
+### ⚙️ Configuration Panel
+![Configuration](screenshots/configuration.png)
+*Intuitive admin interface with support for 25+ email providers and advanced security settings*
 
-### Provider Configuration
-![Provider Setup](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Provider+Configuration)
-*Pre-configured settings for 25+ email providers*
+### 📧 Email Logs & Tracking
+![Email Logs](screenshots/logging.png)
+*Comprehensive logging system with search, filters, and detailed message information*
+
+### 🧪 Test Email Interface
+![Test Email](screenshots/test-email.png)
+*One-click email testing with debug output and configuration validation*
+
+</div>
 
 ## 📦 Installation Guide
 
@@ -193,7 +220,6 @@ php bin/magento cache:clean
 php bin/magento cache:flush
 ```
 
-![Installation Success](https://via.placeholder.com/800x200/4CAF50/FFFFFF?text=Installation+Successful!)
 
 #### Method 3: Manual Installation
 
@@ -233,11 +259,11 @@ Module is enabled
 1. Log in to Magento Admin Panel
 2. Navigate to **Stores → Configuration → Corals Extensions → SMTP Configuration**
 
-![Configuration Menu](https://via.placeholder.com/1200x400/4A90E2/FFFFFF?text=Configuration+Navigation)
+![Configuration Menu](screenshots/configuration.png)
 
 #### Step 2: Basic Configuration
 
-![Basic Settings](https://via.placeholder.com/1200x600/4A90E2/FFFFFF?text=Basic+Configuration+Settings)
+![Basic Settings](screenshots/configuration.png)
 
 **General Settings:**
 - **Enable SMTP**: Yes
@@ -250,7 +276,6 @@ Module is enabled
 Each provider has specific settings. Here are examples:
 
 ##### Gmail Configuration
-![Gmail Setup](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=Gmail+Configuration)
 
 ```
 Host: smtp.gmail.com
@@ -261,7 +286,6 @@ App Password: [Generated from Google Account]
 ```
 
 ##### SendGrid Configuration
-![SendGrid Setup](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=SendGrid+Configuration)
 
 ```
 API Method: Recommended
@@ -272,7 +296,7 @@ From Name: Your Store Name
 
 #### Step 4: Advanced Settings
 
-![Advanced Settings](https://via.placeholder.com/1200x600/4A90E2/FFFFFF?text=Advanced+Configuration)
+![Advanced Settings](screenshots/configuration.png)
 
 **Queue Settings:**
 - Enable Queue: Yes
@@ -294,7 +318,7 @@ From Name: Your Store Name
 
 #### Step 5: Test Configuration
 
-![Test Email](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=Test+Email+Interface)
+![Test Email](screenshots/test-email.png)
 
 1. Click "Test Email Configuration"
 2. Enter recipient email
@@ -336,7 +360,7 @@ From Name: Your Store Name
 ## 📊 Dashboard & Analytics
 
 ### Main Dashboard
-![Main Dashboard](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Analytics+Dashboard+Overview)
+![Main Dashboard](screenshots/dashboard.png)
 
 The dashboard provides real-time insights into your email performance:
 
@@ -348,7 +372,7 @@ The dashboard provides real-time insights into your email performance:
 - **Complaint Rate**: Spam complaint tracking
 
 ### Email Logs Interface
-![Email Logs](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Detailed+Email+Logs)
+![Email Logs](screenshots/logging.png)
 
 Features:
 - Advanced search and filtering
@@ -358,7 +382,7 @@ Features:
 - Error diagnostics
 
 ### Reports & Analytics
-![Reports](https://via.placeholder.com/1200x700/4A90E2/FFFFFF?text=Comprehensive+Reports)
+![Reports](screenshots/dashboard.png)
 
 Available Reports:
 - Daily/Weekly/Monthly summaries
@@ -510,7 +534,6 @@ php bin/magento corals:smtp:verify \
 
 #### Issue: Emails Not Sending
 
-![Troubleshooting](https://via.placeholder.com/800x400/FF5252/FFFFFF?text=Troubleshooting+Guide)
 
 **Possible Causes & Solutions:**
 
@@ -601,7 +624,7 @@ tail -f var/log/corals_smtp_debug.log
 
 ## 🌟 About Corals Technology
 
-![Corals Technology](https://via.placeholder.com/1200x400/4A90E2/FFFFFF?text=Corals+Technology+-+Innovation+Through+Excellence)
+![Corals Technology](screenshots/dashboard.png)
 
 Corals Technology is a leading provider of innovative e-commerce solutions, specializing in Magento extensions that empower businesses worldwide. With over 10 years of experience and 50,000+ satisfied customers, we're committed to:
 
@@ -839,7 +862,6 @@ We respect your privacy. Read our policy at [corals.io/privacy](https://corals.i
 
 <div align="center">
 
-![Footer Banner](https://via.placeholder.com/1200x200/4A90E2/FFFFFF?text=Thank+You+for+Choosing+Corals+SMTP+Pro)
 
 **© 2024 Corals Technology. All rights reserved.**  
 *Building a better tomorrow through technology and compassion*
