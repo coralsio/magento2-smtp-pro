@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="corals" translate="label" sortOrder="400">
+            <label>Corals Extensions</label>
+        </tab>
+        <section id="corals_smtp" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>SMTP Configuration</label>
+            <tab>corals</tab>
+            <resource>Corals_SMTP::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable SMTP</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/Disable SMTP for email delivery</comment>
+                </field>
+                <field id="provider" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Provider</label>
+                    <source_model>Corals\SMTP\Model\Config\Source\Provider</source_model>
+                    <comment>Select your email service provider</comment>
+                </field>
+                <field id="custom_host" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMTP Host</label>
+                    <depends>
+                        <field id="provider">custom</field>
+                    </depends>
+                </field>
+                <field id="custom_port" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMTP Port</label>
+                    <depends>
+                        <field id="provider">custom</field>
+                    </depends>
+                    <validate>validate-number</validate>
+                </field>
+                <field id="authentication" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Authentication Method</label>
+                    <source_model>Corals\SMTP\Model\Config\Source\Authentication</source_model>
+                </field>
+                <field id="username" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Username</label>
+                </field>
+                <field id="password" translate="label" type="obscure" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Password/API Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="encryption" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Encryption</label>
+                    <source_model>Corals\SMTP\Model\Config\Source\Encryption</source_model>
+                </field>
+                <field id="from_email" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>From Email</label>
+                    <validate>validate-email</validate>
+                </field>
+                <field id="from_name" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>From Name</label>
+                </field>
+                <field id="reply_to" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Reply To Email</label>
+                    <validate>validate-email</validate>
+                </field>
+            </group>
+            <group id="queue" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email Queue Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Email Queue</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Queue emails for better performance</comment>
+                </field>
+                <field id="batch_size" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Batch Size</label>
+                    <validate>validate-number</validate>
+                    <comment>Number of emails to process per batch</comment>
+                </field>
+                <field id="retry_attempts" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Retry Attempts</label>
+                    <validate>validate-number</validate>
+                    <comment>Number of retry attempts for failed emails</comment>
+                </field>
+                <field id="retry_delay" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Retry Delay (minutes)</label>
+                    <validate>validate-number</validate>
+                    <comment>Delay between retry attempts</comment>
+                </field>
+            </group>
+            <group id="tracking" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email Tracking</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Email Tracking</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="track_opens" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Email Opens</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="track_clicks" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Link Clicks</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="track_bounces" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Bounces</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="security" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Security Settings</label>
+                <field id="dkim_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable DKIM Signing</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="dkim_domain" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DKIM Domain</label>
+                    <depends>
+                        <field id="dkim_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="dkim_selector" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DKIM Selector</label>
+                    <depends>
+                        <field id="dkim_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="dkim_private_key" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DKIM Private Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="dkim_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="spf_check" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SPF Check</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Verify SPF records before sending</comment>
+                </field>
+                <field id="dmarc_check" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DMARC Check</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Verify DMARC policy compliance</comment>
+                </field>
+            </group>
+            <group id="logging" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Logging Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Email Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="log_level" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Log Level</label>
+                    <source_model>Corals\SMTP\Model\Config\Source\LogLevel</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="retention_days" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Log Retention (days)</label>
+                    <validate>validate-number</validate>
+                    <comment>Number of days to keep email logs</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="debug_mode" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Debug Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable detailed debugging information</comment>
+                </field>
+            </group>
+            <group id="advanced" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Advanced Settings</label>
+                <field id="rate_limit" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Rate Limit (emails/hour)</label>
+                    <validate>validate-number</validate>
+                    <comment>Maximum emails per hour (0 = unlimited)</comment>
+                </field>
+                <field id="connection_timeout" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Connection Timeout (seconds)</label>
+                    <validate>validate-number</validate>
+                </field>
+                <field id="blacklist" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Blacklist</label>
+                    <comment>Comma-separated list of blocked email addresses or domains</comment>
+                </field>
+                <field id="whitelist" translate="label comment" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Whitelist</label>
+                    <comment>Comma-separated list of always-allowed email addresses or domains</comment>
+                </field>
+                <field id="fallback_enabled" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Fallback Provider</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Use fallback provider if primary fails</comment>
+                </field>
+                <field id="fallback_provider" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fallback Provider</label>
+                    <source_model>Corals\SMTP\Model\Config\Source\Provider</source_model>
+                    <depends>
+                        <field id="fallback_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

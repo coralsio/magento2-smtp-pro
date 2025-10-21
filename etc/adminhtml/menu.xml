@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Corals_SMTP::main" title="SMTP Pro" module="Corals_SMTP" sortOrder="40" resource="Corals_SMTP::main"/>
+        <add id="Corals_SMTP::dashboard" title="Dashboard &amp; Statistics" module="Corals_SMTP" sortOrder="5" parent="Corals_SMTP::main" action="smtp-pro/dashboard/index" resource="Corals_SMTP::dashboard"/>
+        <add id="Corals_SMTP::logs" title="Email Logs" module="Corals_SMTP" sortOrder="10" parent="Corals_SMTP::main" action="smtp-pro/logs/index" resource="Corals_SMTP::logs"/>
+        <add id="Corals_SMTP::config" title="Configuration" module="Corals_SMTP" sortOrder="20" parent="Corals_SMTP::main" action="adminhtml/system_config/edit/section/corals_smtp" resource="Corals_SMTP::config"/>
+        <add id="Corals_SMTP::test" title="Test Email" module="Corals_SMTP" sortOrder="30" parent="Corals_SMTP::main" action="smtp-pro/test/index" resource="Corals_SMTP::test"/>
+    </menu>
+</config>

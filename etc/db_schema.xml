@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="corals_smtp_queue" resource="default" engine="innodb" comment="Email Queue">
+        <column xsi:type="int" name="queue_id" unsigned="true" nullable="false" identity="true" comment="Queue ID"/>
+        <column xsi:type="varchar" name="to" nullable="false" length="255" comment="To Email"/>
+        <column xsi:type="varchar" name="from" nullable="true" length="255" comment="From Email"/>
+        <column xsi:type="varchar" name="subject" nullable="true" length="255" comment="Subject"/>
+        <column xsi:type="text" name="body" nullable="true" comment="Email Body"/>
+        <column xsi:type="text" name="message_serialized" nullable="true" comment="Serialized Message Object"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" default="pending" comment="Status"/>
+        <column xsi:type="smallint" name="priority" unsigned="true" nullable="false" default="3" comment="Priority"/>
+        <column xsi:type="smallint" name="attempts" unsigned="true" nullable="false" default="0" comment="Attempts"/>
+        <column xsi:type="text" name="last_error" nullable="true" comment="Last Error Message"/>
+        <column xsi:type="timestamp" name="scheduled_at" on_update="false" nullable="true" comment="Scheduled At"/>
+        <column xsi:type="timestamp" name="processed_at" on_update="false" nullable="true" comment="Processed At"/>
+        <column xsi:type="timestamp" name="sent_at" on_update="false" nullable="true" comment="Sent At"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="queue_id"/>
+        </constraint>
+        <index referenceId="IDX_STATUS_SCHEDULED" indexType="btree">
+            <column name="status"/>
+            <column name="scheduled_at"/>
+        </index>
+        <index referenceId="IDX_PRIORITY" indexType="btree">
+            <column name="priority"/>
+        </index>
+    </table>
+    
+    <table name="corals_smtp_log" resource="default" engine="innodb" comment="Email Log">
+        <column xsi:type="int" name="log_id" unsigned="true" nullable="false" identity="true" comment="Log ID"/>
+        <column xsi:type="varchar" name="to" nullable="false" length="255" comment="To Email"/>
+        <column xsi:type="varchar" name="from" nullable="true" length="255" comment="From Email"/>
+        <column xsi:type="varchar" name="cc" nullable="true" length="500" comment="CC Emails"/>
+        <column xsi:type="varchar" name="bcc" nullable="true" length="500" comment="BCC Emails"/>
+        <column xsi:type="varchar" name="reply_to" nullable="true" length="255" comment="Reply To"/>
+        <column xsi:type="varchar" name="subject" nullable="true" length="255" comment="Subject"/>
+        <column xsi:type="text" name="body" nullable="true" comment="Email Body"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" comment="Status"/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Error Message"/>
+        <column xsi:type="varchar" name="provider" nullable="true" length="50" comment="Provider Used"/>
+        <column xsi:type="decimal" name="duration" scale="4" precision="10" nullable="true" comment="Send Duration"/>
+        <column xsi:type="varchar" name="message_id" nullable="true" length="255" comment="Message ID"/>
+        <column xsi:type="int" name="store_id" unsigned="true" nullable="true" comment="Store ID"/>
+        <column xsi:type="varchar" name="ip_address" nullable="true" length="45" comment="IP Address"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <index referenceId="IDX_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="IDX_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+        <index referenceId="IDX_MESSAGE_ID" indexType="btree">
+            <column name="message_id"/>
+        </index>
+    </table>
+    
+    <table name="corals_smtp_tracking" resource="default" engine="innodb" comment="Email Tracking">
+        <column xsi:type="int" name="tracking_id" unsigned="true" nullable="false" identity="true" comment="Tracking ID"/>
+        <column xsi:type="varchar" name="message_id" nullable="false" length="255" comment="Message ID"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Email Address"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="20" comment="Tracking Type"/>
+        <column xsi:type="text" name="data" nullable="true" comment="Additional Data"/>
+        <column xsi:type="varchar" name="ip_address" nullable="true" length="45" comment="IP Address"/>
+        <column xsi:type="varchar" name="user_agent" nullable="true" length="500" comment="User Agent"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="tracking_id"/>
+        </constraint>
+        <index referenceId="IDX_MESSAGE_ID" indexType="btree">
+            <column name="message_id"/>
+        </index>
+        <index referenceId="IDX_EMAIL_TYPE" indexType="btree">
+            <column name="email"/>
+            <column name="type"/>
+        </index>
+    </table>
+    
+    <table name="corals_smtp_template" resource="default" engine="innodb" comment="Email Templates">
+        <column xsi:type="int" name="template_id" unsigned="true" nullable="false" identity="true" comment="Template ID"/>
+        <column xsi:type="varchar" name="code" nullable="false" length="100" comment="Template Code"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Template Name"/>
+        <column xsi:type="varchar" name="subject" nullable="false" length="255" comment="Subject"/>
+        <column xsi:type="text" name="html_content" nullable="true" comment="HTML Content"/>
+        <column xsi:type="text" name="text_content" nullable="true" comment="Text Content"/>
+        <column xsi:type="text" name="variables" nullable="true" comment="Available Variables"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="int" name="store_id" unsigned="true" nullable="true" comment="Store ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="template_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNIQUE_CODE_STORE">
+            <column name="code"/>
+            <column name="store_id"/>
+        </constraint>
+    </table>
+    
+    <table name="corals_smtp_bounce" resource="default" engine="innodb" comment="Email Bounces">
+        <column xsi:type="int" name="bounce_id" unsigned="true" nullable="false" identity="true" comment="Bounce ID"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Email Address"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="20" comment="Bounce Type"/>
+        <column xsi:type="text" name="reason" nullable="true" comment="Bounce Reason"/>
+        <column xsi:type="smallint" name="count" unsigned="true" nullable="false" default="1" comment="Bounce Count"/>
+        <column xsi:type="timestamp" name="first_bounce_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="First Bounce At"/>
+        <column xsi:type="timestamp" name="last_bounce_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Last Bounce At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="bounce_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNIQUE_EMAIL">
+            <column name="email"/>
+        </constraint>
+    </table>
+</schema>

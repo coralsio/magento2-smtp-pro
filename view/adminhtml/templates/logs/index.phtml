@@ -1,0 +1,474 @@
+<?php
+/**
+ * @var \Corals\SMTP\Block\Adminhtml\Logs\Index $block
+ */
+?>
+<div class="smtp-logs-container">
+    <!-- Logs Header -->
+    <div class="logs-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H6A2 2 0 0 0 4 4V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1><?= $block->escapeHtml(__('Email Logs')) ?></h1>
+                <p><?= $block->escapeHtml(__('Monitor email delivery status and troubleshoot issues.')) ?></p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="<?= $block->escapeUrl($block->getConfigUrl()) ?>" class="action-button primary">
+                <span class="button-icon">⚙️</span>
+                <span><?= $block->escapeHtml(__('Configuration')) ?></span>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getTestEmailUrl()) ?>" class="action-button secondary">
+                <span class="button-icon">📧</span>
+                <span><?= $block->escapeHtml(__('Test Email')) ?></span>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getDashboardUrl()) ?>" class="action-button tertiary">
+                <span class="button-icon">📊</span>
+                <span><?= $block->escapeHtml(__('Dashboard')) ?></span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Logs Summary -->
+    <div class="logs-summary">
+        <div class="summary-card">
+            <div class="summary-icon">📧</div>
+            <div class="summary-content">
+                <h3><?= $block->escapeHtml(__('Total Logs')) ?></h3>
+                <p class="summary-value"><?= $block->getLogsCount() ?></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Content -->
+    <div class="logs-content">
+        <?php if (!$block->logsTableExists()): ?>
+            <!-- Table doesn't exist -->
+            <div class="empty-state error">
+                <div class="empty-icon">⚠️</div>
+                <h3><?= $block->escapeHtml(__('Database Table Missing')) ?></h3>
+                <p><?= $block->escapeHtml(__('The email logs table has not been created yet. Please run the database upgrade command:')) ?></p>
+                <code>bin/magento setup:upgrade</code>
+            </div>
+        <?php elseif (!$block->hasLogsData()): ?>
+            <!-- No logs yet -->
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3><?= $block->escapeHtml(__('No Email Logs Yet')) ?></h3>
+                <p><?= $block->escapeHtml(__('No emails have been sent through SMTP yet. Send a test email to see logs appear here.')) ?></p>
+                <a href="<?= $block->escapeUrl($block->getTestEmailUrl()) ?>" class="empty-action">
+                    <?= $block->escapeHtml(__('Send Test Email')) ?>
+                </a>
+            </div>
+        <?php else: ?>
+            <!-- Logs Table -->
+            <div class="logs-table-container">
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('ID')) ?></th>
+                            <th><?= $block->escapeHtml(__('Date')) ?></th>
+                            <th><?= $block->escapeHtml(__('Status')) ?></th>
+                            <th><?= $block->escapeHtml(__('To')) ?></th>
+                            <th><?= $block->escapeHtml(__('From')) ?></th>
+                            <th><?= $block->escapeHtml(__('Subject')) ?></th>
+                            <th><?= $block->escapeHtml(__('Provider')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $logs = $block->getLogsCollection(); ?>
+                        <?php foreach ($logs as $log): ?>
+                            <tr class="log-row">
+                                <td class="log-id">#<?= $block->escapeHtml($log->getLogId()) ?></td>
+                                <td class="log-date"><?= $block->escapeHtml($block->formatLogDate($log->getCreatedAt())) ?></td>
+                                <td class="log-status">
+                                    <span class="status-badge <?= $block->getStatusClass($log->getStatus()) ?>">
+                                        <?= $block->escapeHtml($block->getStatusLabel($log->getStatus())) ?>
+                                    </span>
+                                </td>
+                                <td class="log-to" title="<?= $block->escapeHtml($log->getRecipientEmail()) ?>">
+                                    <?= $block->escapeHtml($block->truncateText($log->getRecipientEmail(), 30)) ?>
+                                </td>
+                                <td class="log-from" title="<?= $block->escapeHtml($log->getSenderEmail()) ?>">
+                                    <?= $block->escapeHtml($block->truncateText($log->getSenderEmail(), 30)) ?>
+                                </td>
+                                <td class="log-subject" title="<?= $block->escapeHtml($log->getSubject()) ?>">
+                                    <?= $block->escapeHtml($block->truncateText($log->getSubject(), 40)) ?>
+                                </td>
+                                <td class="log-provider">
+                                    <?= $block->escapeHtml($log->getProvider() ?: 'Default') ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <?php if ($block->getLogsCount() > 50): ?>
+                    <div class="pagination-info">
+                        <?= $block->escapeHtml(__('Showing latest 50 records of %1 total', $block->getLogsCount())) ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+/* SMTP Logs Styles */
+.smtp-logs-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 24px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Logs Header */
+.logs-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 32px;
+    color: white;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.header-icon svg {
+    color: white;
+}
+
+.header-text h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.header-text p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 16px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.action-button.primary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.action-button.secondary {
+    background: white;
+    color: #667eea;
+    border: 1px solid transparent;
+}
+
+.action-button.tertiary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Logs Summary */
+.logs-summary {
+    margin-bottom: 32px;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 300px;
+}
+
+.summary-icon {
+    font-size: 32px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.summary-content h3 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-value {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Logs Content */
+.logs-content {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.empty-state.error h3 {
+    color: #991b1b;
+}
+
+.empty-state p {
+    margin: 0 0 20px 0;
+    color: #6b7280;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.empty-state.error p {
+    color: #7f1d1d;
+}
+
+.empty-state code {
+    background: #f3f4f6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.empty-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.empty-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Logs Table */
+.logs-table-container {
+    overflow-x: auto;
+}
+
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.logs-table th {
+    background: #f8fafc;
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.logs-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.log-row:hover {
+    background: #f8fafc;
+}
+
+.log-id {
+    font-weight: 600;
+    color: #6b7280;
+    font-family: 'Courier New', monospace;
+}
+
+.log-date {
+    font-weight: 500;
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.status-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.status-queued {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+.status-unknown {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #9ca3af;
+}
+
+/* Table Columns */
+.log-to, .log-from, .log-subject {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.log-provider {
+    font-weight: 500;
+    color: #6366f1;
+}
+
+/* Pagination Info */
+.pagination-info {
+    margin-top: 20px;
+    text-align: center;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .smtp-logs-container {
+        padding: 16px;
+    }
+    
+    .logs-header {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .logs-table {
+        font-size: 12px;
+    }
+    
+    .logs-table th,
+    .logs-table td {
+        padding: 8px 6px;
+    }
+}
+</style>

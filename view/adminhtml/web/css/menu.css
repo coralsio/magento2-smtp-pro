@@ -1,0 +1,56 @@
+/**
+ * Corals SMTP Admin Menu Styles
+ */
+
+/* Dashboard menu icon */
+.admin__menu .item-smtp-pro-dashboard > a:before,
+.admin__menu .item-corals-smtp-dashboard > a:before {
+    content: '\e604';
+    font-family: 'Admin Icons';
+    font-size: 1.8rem;
+    padding-top: 0.4rem;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Logs menu icon */
+.admin__menu .item-smtp-pro-logs > a:before,
+.admin__menu .item-corals-smtp-logs > a:before {
+    content: '\e60a';
+    font-family: 'Admin Icons';
+    font-size: 1.8rem;
+    padding-top: 0.4rem;
+}
+
+/* Test Email menu icon */
+.admin__menu .item-smtp-pro-test > a:before,
+.admin__menu .item-corals-smtp-test > a:before {
+    content: '\e609';
+    font-family: 'Admin Icons';
+    font-size: 1.8rem;
+    padding-top: 0.4rem;
+}
+
+/* Queue menu icon */
+.admin__menu .item-smtp-pro-queue > a:before,
+.admin__menu .item-corals-smtp-queue > a:before {
+    content: '\e612';
+    font-family: 'Admin Icons';
+    font-size: 1.8rem;
+    padding-top: 0.4rem;
+}
+
+/* Tracking menu icon */
+.admin__menu .item-smtp-pro-tracking > a:before,
+.admin__menu .item-corals-smtp-tracking > a:before {
+    content: '\e616';
+    font-family: 'Admin Icons';
+    font-size: 1.8rem;
+    padding-top: 0.4rem;
+}

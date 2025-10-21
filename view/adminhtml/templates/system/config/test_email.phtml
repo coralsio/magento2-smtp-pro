@@ -1,0 +1,1815 @@
+<?php
+/**
+ * @var \Corals\SMTP\Block\Adminhtml\System\Config\TestEmail $block
+ */
+?>
+<div id="test_email_container" class="smtp-test-email-container">
+    <!-- Header Section with Animated Background -->
+    <div class="smtp-header">
+        <div class="smtp-header-content">
+            <div class="smtp-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="smtp-header-text">
+                <h3><?= $block->escapeHtml(__('SMTP Configuration Test')) ?></h3>
+                <p><?= $block->escapeHtml(__('Send a test email to verify your SMTP settings are working correctly.')) ?></p>
+            </div>
+        </div>
+        <div class="smtp-header-bg"></div>
+    </div>
+    
+    <!-- Current Configuration Info -->
+    <div class="smtp-config-info">
+        <h4 class="config-title"><?= $block->escapeHtml(__('Current SMTP Configuration')) ?></h4>
+        <div class="config-details">
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('Provider:')) ?></span>
+                <span class="config-value"><?= $block->escapeHtml($block->getProviderDisplayName()) ?></span>
+            </div>
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('Host:')) ?></span>
+                <span class="config-value"><?= $block->escapeHtml($block->getSmtpHost()) ?></span>
+            </div>
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('Port:')) ?></span>
+                <span class="config-value"><?= $block->escapeHtml($block->getSmtpPort()) ?></span>
+            </div>
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('Status:')) ?></span>
+                <span class="config-value <?= $block->isSmtpEnabled() ? 'enabled' : 'disabled' ?>">
+                    <?= $block->isSmtpEnabled() ? $block->escapeHtml(__('Enabled')) : $block->escapeHtml(__('Disabled')) ?>
+                </span>
+            </div>
+        </div>
+        <div class="config-actions">
+            <a href="<?= $block->escapeUrl($block->getConfigUrl()) ?>" class="config-link">
+                <span><?= $block->escapeHtml(__('Update Configuration')) ?></span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Test Form Section -->
+    <div class="smtp-test-form">
+        <div class="smtp-form-row">
+            <div class="smtp-input-group">
+                <label class="smtp-label" for="test_email_address">
+                    <span class="label-icon">📧</span>
+                    <span class="label-text"><?= $block->escapeHtml(__('Test Email Address')) ?></span>
+                </label>
+                <div class="smtp-input-wrapper">
+                    <input type="email" 
+                           id="test_email_address" 
+                           name="test_email_address" 
+                           class="smtp-input" 
+                           placeholder="<?= $block->escapeHtml(__('Enter your email address...')) ?>"
+                           value="" />
+                    <div class="smtp-input-focus-line"></div>
+                </div>
+                <div class="smtp-field-note">
+                    <span><?= $block->escapeHtml(__('We\'ll send a test email to verify your SMTP configuration')) ?></span>
+                </div>
+            </div>
+            
+            <div class="smtp-button-group">
+                <button type="button" 
+                        id="test_email_button" 
+                        class="smtp-send-button"
+                        onclick="testEmailConnection(); return false;">
+                    <span class="button-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 19L19 12L12 5M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="button-text"><?= $block->escapeHtml(__('Send Test Email')) ?></span>
+                    <div class="button-ripple"></div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div id="smtp-progress-bar" class="smtp-progress-container" style="display: none;">
+            <div class="smtp-progress-bar">
+                <div class="smtp-progress-fill"></div>
+            </div>
+            <div class="smtp-progress-text">Sending test email...</div>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="test_email_result" class="smtp-result-container" style="display: none;">
+            <div id="test_email_message" class="smtp-result-message"></div>
+        </div>
+    </div>
+    
+    <!-- Floating Particles Background -->
+    <div class="smtp-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+</div>
+
+<style>
+/* Main Container with Glass Morphism Effect */
+.smtp-test-email-container {
+    position: relative;
+    background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 24px;
+    padding: 0;
+    margin: 20px 0;
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.1),
+        0 8px 16px rgba(0,0,0,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.smtp-test-email-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 32px 64px rgba(0,0,0,0.15),
+        0 16px 32px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* Animated Header Section */
+.smtp-header {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 32px 40px;
+    color: white;
+    overflow: hidden;
+}
+
+.smtp-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+    animation: backgroundShift 10s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(-5px) translateY(-10px); }
+    50% { transform: translateX(10px) translateY(5px); }
+    75% { transform: translateX(-3px) translateY(8px); }
+}
+
+.smtp-header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.smtp-icon {
+    background: rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+.smtp-icon svg {
+    color: white;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes iconPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.smtp-header-text h3 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ffffff, #f0f8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.smtp-header-text p {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* SMTP Configuration Info Section */
+.smtp-config-info {
+    padding: 32px 40px;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.config-title {
+    text-align: center;
+    margin: 0 0 24px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.config-details {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.config-item:last-child {
+    border-bottom: none;
+}
+
+.config-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+}
+
+.config-value {
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.config-value.enabled {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.config-value.disabled {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.config-actions {
+    text-align: center;
+}
+
+.config-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.config-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.providers-title {
+    text-align: center;
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.providers-subtitle {
+    text-align: center;
+    margin: 0 0 24px 0;
+    font-size: 14px;
+    color: #6b7280;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.providers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.provider-card {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.05),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    border: 2px solid transparent;
+}
+
+.provider-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.provider-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.provider-card:hover::before {
+    opacity: 1;
+}
+
+.provider-card:hover .provider-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.provider-card:hover .provider-name {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.provider-icon {
+    position: relative;
+    z-index: 2;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px auto;
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.provider-name {
+    position: relative;
+    z-index: 2;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.provider-status {
+    position: relative;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        background: #10b981;
+    }
+    50% { 
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.4);
+        background: #34d399;
+    }
+}
+
+/* Individual Provider Colors */
+.provider-card.gmail .provider-icon {
+    background: linear-gradient(135deg, rgba(234, 67, 53, 0.1), rgba(234, 67, 53, 0.05));
+}
+
+.provider-card.sendgrid .provider-icon {
+    background: linear-gradient(135deg, rgba(26, 130, 226, 0.1), rgba(26, 130, 226, 0.05));
+}
+
+.provider-card.mailgun .provider-icon {
+    background: linear-gradient(135deg, rgba(240, 102, 35, 0.1), rgba(240, 102, 35, 0.05));
+}
+
+.provider-card.amazon-ses .provider-icon {
+    background: linear-gradient(135deg, rgba(255, 153, 0, 0.1), rgba(255, 153, 0, 0.05));
+}
+
+.provider-card.postmark .provider-icon {
+    background: linear-gradient(135deg, rgba(255, 221, 21, 0.1), rgba(255, 221, 21, 0.05));
+}
+
+.provider-card.custom .provider-icon {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+}
+
+/* Provider Card Animations */
+.provider-card.gmail:hover {
+    border-color: rgba(234, 67, 53, 0.3);
+    box-shadow: 0 20px 40px rgba(234, 67, 53, 0.2);
+}
+
+.provider-card.sendgrid:hover {
+    border-color: rgba(26, 130, 226, 0.3);
+    box-shadow: 0 20px 40px rgba(26, 130, 226, 0.2);
+}
+
+.provider-card.mailgun:hover {
+    border-color: rgba(240, 102, 35, 0.3);
+    box-shadow: 0 20px 40px rgba(240, 102, 35, 0.2);
+}
+
+.provider-card.amazon-ses:hover {
+    border-color: rgba(255, 153, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(255, 153, 0, 0.2);
+}
+
+.provider-card.postmark:hover {
+    border-color: rgba(255, 221, 21, 0.3);
+    box-shadow: 0 20px 40px rgba(255, 221, 21, 0.2);
+}
+
+.provider-card.custom:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+}
+
+/* Provider Selection Elements */
+.provider-selection-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 3;
+}
+
+.provider-card.selected .provider-selection-check {
+    opacity: 1;
+    transform: scale(1);
+    background: #10b981;
+    color: white;
+}
+
+.provider-card.selected .provider-status {
+    background: #10b981;
+    animation: selectedPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes selectedPulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.6);
+    }
+}
+
+/* Selected Provider Info Panel */
+.selected-provider-info {
+    margin-top: 24px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 16px;
+    padding: 20px;
+    border: 2px solid #0ea5e9;
+    animation: providerInfoSlideIn 0.5s ease-out;
+}
+
+@keyframes providerInfoSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.provider-info-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.provider-info-icon {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.provider-info-text {
+    flex: 1;
+}
+
+.provider-info-text h5 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0c4a6e;
+}
+
+.provider-info-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #0369a1;
+    line-height: 1.4;
+}
+
+.status-badge {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.animate-check {
+    animation: checkAnimation 0.6s ease-out;
+}
+
+@keyframes checkAnimation {
+    0% { transform: scale(0) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(180deg); }
+    100% { transform: scale(1) rotate(360deg); }
+}
+
+/* Test Form Section */
+.smtp-test-form {
+    padding: 40px;
+    background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+}
+
+.smtp-form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    align-items: end;
+    margin-bottom: 24px;
+}
+
+/* Input Group Styling */
+.smtp-input-group {
+    position: relative;
+}
+
+.smtp-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+}
+
+.label-icon {
+    font-size: 16px;
+    animation: iconBounce 2s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.smtp-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.05),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smtp-input-wrapper:hover {
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 4px 10px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.smtp-input {
+    width: 100%;
+    padding: 18px 24px;
+    border: 2px solid transparent;
+    background: transparent;
+    font-size: 16px;
+    color: #374151;
+    outline: none;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.smtp-input:focus {
+    border-color: transparent;
+}
+
+.smtp-input-focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+}
+
+.smtp-input:focus + .smtp-input-focus-line {
+    width: 100%;
+}
+
+.smtp-field-note {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #6b7280;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.smtp-input:focus ~ .smtp-field-note,
+.smtp-input:not(:placeholder-shown) ~ .smtp-field-note {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Button Styling */
+.smtp-button-group {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.smtp-send-button {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 18px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+    justify-content: center;
+    box-shadow: 
+        0 8px 16px rgba(102, 126, 234, 0.4),
+        0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+}
+
+.smtp-send-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 24px rgba(102, 126, 234, 0.5),
+        0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.smtp-send-button:active {
+    transform: translateY(-1px);
+}
+
+.smtp-send-button:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    cursor: not-allowed;
+    transform: translateY(0);
+    box-shadow: 
+        0 4px 8px rgba(156, 163, 175, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-icon {
+    transition: transform 0.3s ease;
+}
+
+.smtp-send-button:hover .button-icon {
+    transform: translateX(4px);
+}
+
+.button-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: all 0.6s ease;
+}
+
+.smtp-send-button:active .button-ripple {
+    width: 300px;
+    height: 300px;
+}
+
+/* Progress Bar */
+.smtp-progress-container {
+    margin: 24px 0;
+    text-align: center;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.smtp-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.smtp-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 10px;
+    animation: progressFill 3s ease-in-out infinite;
+    transform-origin: left;
+}
+
+@keyframes progressFill {
+    0% { transform: scaleX(0); }
+    50% { transform: scaleX(0.7); }
+    100% { transform: scaleX(1); }
+}
+
+.smtp-progress-text {
+    font-size: 14px;
+    color: #667eea;
+    font-weight: 500;
+    animation: textPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Results Section */
+.smtp-result-container {
+    margin-top: 24px;
+    animation: resultSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes resultSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.smtp-result-message .message {
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 0;
+    font-weight: 500;
+    font-size: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.smtp-result-message .message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: currentColor;
+    opacity: 0.3;
+}
+
+.smtp-result-message .message-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+}
+
+.smtp-result-message .message-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    box-shadow: 0 8px 16px rgba(239, 68, 68, 0.2);
+}
+
+.smtp-result-message .message-success::after {
+    content: "✨";
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 20px;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.smtp-result-message .message-error::after {
+    content: "⚠️";
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 20px;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(180deg); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Floating Particles Background */
+.smtp-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.particle:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation: float1 6s ease-in-out infinite;
+}
+
+.particle:nth-child(2) {
+    top: 60%;
+    left: 80%;
+    animation: float2 8s ease-in-out infinite;
+}
+
+.particle:nth-child(3) {
+    top: 80%;
+    left: 40%;
+    animation: float3 7s ease-in-out infinite;
+}
+
+.particle:nth-child(4) {
+    top: 30%;
+    left: 70%;
+    animation: float4 9s ease-in-out infinite;
+}
+
+.particle:nth-child(5) {
+    top: 70%;
+    left: 10%;
+    animation: float5 5s ease-in-out infinite;
+}
+
+@keyframes float1 {
+    0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+    33% { transform: translateY(-20px) translateX(10px) scale(1.2); }
+    66% { transform: translateY(10px) translateX(-5px) scale(0.8); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+    50% { transform: translateY(-30px) translateX(-15px) scale(1.5); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+    25% { transform: translateY(15px) translateX(20px) scale(0.7); }
+    75% { transform: translateY(-10px) translateX(-10px) scale(1.3); }
+}
+
+@keyframes float4 {
+    0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+    40% { transform: translateY(-25px) translateX(8px) scale(1.1); }
+    80% { transform: translateY(5px) translateX(-12px) scale(0.9); }
+}
+
+@keyframes float5 {
+    0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+    60% { transform: translateY(-15px) translateX(25px) scale(1.4); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .smtp-form-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .smtp-header {
+        padding: 24px 20px;
+    }
+    
+    .smtp-test-form {
+        padding: 24px 20px;
+    }
+    
+    .smtp-header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+}
+</style>
+
+<script type="text/javascript">
+require(['jquery', 'mage/translate'], function($, $t) {
+    $(document).ready(function() {
+        // Initialize fancy interactions
+        initFancyInteractions();
+        
+        // Add enter key support for email input
+        $('#test_email_address').on('keypress', function(e) {
+            if (e.which === 13) {
+                testEmailConnection();
+                return false;
+            }
+        });
+        
+        // Add email validation on input
+        $('#test_email_address').on('input', function() {
+            validateEmailRealTime($(this));
+        });
+        
+        // Load current provider selection
+        loadCurrentProvider();
+    });
+    
+    function initFancyInteractions() {
+        // Add hover effects to container
+        $('.smtp-test-email-container').on('mouseenter', function() {
+            $(this).addClass('hover-active');
+        }).on('mouseleave', function() {
+            $(this).removeClass('hover-active');
+        });
+        
+        // Add focus effects to input
+        $('#test_email_address').on('focus', function() {
+            $(this).closest('.smtp-input-wrapper').addClass('focused');
+        }).on('blur', function() {
+            $(this).closest('.smtp-input-wrapper').removeClass('focused');
+        });
+        
+        // Add ripple effect to button clicks
+        $('.smtp-send-button').on('click', function(e) {
+            createRippleEffect(e, $(this));
+        });
+        
+        // Initialize provider card interactions
+        initProviderCards();
+    }
+    
+    function initProviderCards() {
+        $('.provider-card').each(function(index) {
+            // Staggered animation on load
+            $(this).css({
+                'animation-delay': (index * 0.1) + 's',
+                'animation': 'providerSlideIn 0.6s ease-out forwards'
+            });
+            
+            // Click interactions
+            $(this).on('click', function() {
+                var providerName = $(this).find('.provider-name').text();
+                showProviderInfo(providerName, $(this));
+            });
+            
+            // Hover tooltip
+            $(this).on('mouseenter', function() {
+                var providerName = $(this).find('.provider-name').text();
+                showProviderTooltip($(this), providerName);
+            }).on('mouseleave', function() {
+                hideProviderTooltip();
+            });
+        });
+    }
+    
+    function showProviderInfo(providerName, card) {
+        // Select provider
+        selectProvider(card);
+        
+        // Show provider info below the grid
+        showSelectedProviderInfo(providerName, card);
+        
+        // Save selection
+        saveProviderSelection(card.data('provider'));
+    }
+    
+    function selectProvider(card) {
+        // Remove previous selection
+        $('.provider-card').removeClass('selected');
+        $('.provider-selection-check').removeClass('animate-check');
+        
+        // Add selection to clicked card
+        card.addClass('selected');
+        
+        // Add selection animation
+        setTimeout(function() {
+            card.find('.provider-selection-check').addClass('animate-check');
+        }, 200);
+        
+        // Update hidden input
+        $('#selected_provider').val(card.data('provider'));
+        
+        // Show selection confirmation
+        showProviderSelectionConfirmation(card);
+    }
+    
+    function showSelectedProviderInfo(providerName, card) {
+        var providerIcon = card.find('.provider-icon').html();
+        var infoPanel = $('#selected-provider-info');
+        
+        // Update info panel content
+        infoPanel.find('.provider-info-icon').html(providerIcon);
+        infoPanel.find('#selected-provider-name').text(providerName);
+        infoPanel.find('#selected-provider-description').text(getProviderDescription(providerName));
+        
+        // Show with animation
+        if (!infoPanel.is(':visible')) {
+            infoPanel.fadeIn(400);
+        }
+        
+        // Scroll to info panel
+        $('html, body').animate({
+            scrollTop: infoPanel.offset().top - 100
+        }, 600);
+    }
+    
+    function saveProviderSelection(providerId) {
+        $('#selected_provider').val(providerId);
+        
+        // Send AJAX request to save provider selection to configuration
+        saveProviderToConfig(providerId);
+    }
+    
+    function saveProviderToConfig(providerId) {
+        $.ajax({
+            url: '<?= $block->escapeJs($block->getUrl('adminhtml/system_config/save')) ?>',
+            type: 'POST',
+            data: {
+                'groups[general][fields][provider][value]': providerId,
+                'section': 'corals_smtp',
+                'form_key': FORM_KEY
+            },
+            success: function(response) {
+                console.log('Provider saved successfully:', providerId);
+            },
+            error: function(xhr, status, error) {
+                console.log('Error saving provider:', error);
+            }
+        });
+    }
+    
+    function showProviderSelectionConfirmation(card) {
+        var providerName = card.find('.provider-name').text();
+        
+        // Create and show a temporary confirmation message
+        var confirmation = $('<div class="provider-confirmation">' +
+            '<span class="confirmation-icon">✅</span>' +
+            '<span class="confirmation-text">' + providerName + ' selected!</span>' +
+        '</div>');
+        
+        // Position and show confirmation
+        card.append(confirmation);
+        
+        setTimeout(function() {
+            confirmation.addClass('show');
+        }, 100);
+        
+        // Remove confirmation after 2 seconds
+        setTimeout(function() {
+            confirmation.removeClass('show');
+            setTimeout(function() {
+                confirmation.remove();
+            }, 300);
+        }, 2000);
+    }
+    
+    function loadCurrentProvider() {
+        // Get current provider from the backend
+        $.ajax({
+            url: '<?= $block->escapeJs($block->getUrl('corals_smtp/config/getProvider')) ?>',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success && response.provider) {
+                    var card = $('.provider-card[data-provider="' + response.provider + '"]');
+                    if (card.length) {
+                        selectProvider(card);
+                        var providerName = card.find('.provider-name').text();
+                        showSelectedProviderInfo(providerName, card);
+                    }
+                }
+            },
+            error: function() {
+                // If we can't load from backend, try to get from hidden field or default
+                console.log('Could not load current provider from config');
+            }
+        });
+    }
+    
+    function getProviderDescription(provider) {
+        var descriptions = {
+            'Gmail': 'Google\'s reliable email service with excellent deliverability and 15GB free storage.',
+            'SendGrid': 'Professional email delivery service with advanced analytics and high volume support.',
+            'Mailgun': 'Developer-friendly email API with powerful routing and validation features.',
+            'Amazon SES': 'Amazon\'s scalable email service with pay-as-you-go pricing and AWS integration.',
+            'Postmark': 'Transactional email specialist focused on speed and deliverability.',
+            'Custom SMTP': 'Configure any SMTP server with custom settings for maximum flexibility.'
+        };
+        return descriptions[provider] || 'Professional email delivery service.';
+    }
+    
+    function getProviderFeatures(provider) {
+        var features = {
+            'Gmail': '📧 Free 15GB storage<br>🔒 Advanced security<br>📱 Mobile apps',
+            'SendGrid': '📊 Advanced analytics<br>🚀 High volume support<br>🔧 Developer APIs',
+            'Mailgun': '⚡ Fast delivery<br>🔍 Email validation<br>📋 Advanced routing',
+            'Amazon SES': '💰 Pay-as-you-go<br>☁️ AWS integration<br>📈 Scalable',
+            'Postmark': '🎯 Transactional focus<br>⚡ Fast delivery<br>📊 Detailed analytics',
+            'Custom SMTP': '🔧 Full control<br>⚙️ Custom settings<br>🔒 Your infrastructure'
+        };
+        return features[provider] || '✨ Professional features';
+    }
+    
+    function showProviderTooltip(card, providerName) {
+        var tooltip = $('<div class="provider-tooltip">' + 
+            '<span class="tooltip-text">Click to learn more about ' + providerName + '</span>' +
+            '<div class="tooltip-arrow"></div>' +
+        '</div>');
+        
+        card.append(tooltip);
+        
+        setTimeout(function() {
+            tooltip.addClass('show');
+        }, 100);
+    }
+    
+    function hideProviderTooltip() {
+        $('.provider-tooltip').removeClass('show');
+        setTimeout(function() {
+            $('.provider-tooltip').remove();
+        }, 200);
+    }
+    
+    function createRippleEffect(event, element) {
+        var ripple = element.find('.button-ripple');
+        var rect = element[0].getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        
+        ripple.css({
+            left: x + 'px',
+            top: y + 'px',
+            transform: 'translate(-50%, -50%) scale(0)',
+            opacity: '0.6'
+        });
+        
+        setTimeout(function() {
+            ripple.css({
+                transform: 'translate(-50%, -50%) scale(4)',
+                opacity: '0'
+            });
+        }, 10);
+    }
+    
+    function validateEmailRealTime(input) {
+        var email = input.val().trim();
+        var wrapper = input.closest('.smtp-input-wrapper');
+        
+        if (email === '') {
+            wrapper.removeClass('valid invalid');
+            return;
+        }
+        
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(email)) {
+            wrapper.removeClass('invalid').addClass('valid');
+        } else {
+            wrapper.removeClass('valid').addClass('invalid');
+        }
+    }
+    
+    window.testEmailConnection = function() {
+        var testEmailAddress = $('#test_email_address').val().trim();
+        var resultDiv = $('#test_email_result');
+        var messageDiv = $('#test_email_message');
+        var button = $('#test_email_button');
+        var progressBar = $('#smtp-progress-bar');
+        var originalButtonHtml = button.html();
+        
+        // Clear previous results
+        resultDiv.hide();
+        messageDiv.empty();
+        progressBar.hide();
+        
+        if (!testEmailAddress) {
+            showFancyError($t('Please enter a test email address.'));
+            $('#test_email_address').focus();
+            return false;
+        }
+        
+        // Validate email format
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(testEmailAddress)) {
+            showFancyError($t('Please enter a valid email address.'));
+            $('#test_email_address').focus();
+            return false;
+        }
+        
+        // Show loading state with fancy animations
+        button.prop('disabled', true)
+              .addClass('loading')
+              .html('<div class="loading-spinner"></div><span class="button-text">' + $t('Sending...') + '</span>');
+        
+        // Show progress bar with animation
+        progressBar.fadeIn(300);
+        
+        // Add pulsing effect to container
+        $('.smtp-test-email-container').addClass('sending');
+        
+        $.ajax({
+            url: '<?= $block->escapeJs($block->getAjaxUrl()) ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'test_email': testEmailAddress,
+                'form_key': FORM_KEY
+            },
+            timeout: 30000,
+            success: function(response) {
+                setTimeout(function() {
+                    progressBar.fadeOut(200);
+                    
+                    if (response.success) {
+                        showSuccessMessage(testEmailAddress);
+                    } else {
+                        showErrorMessage(response.message || $t('Unknown error occurred'));
+                    }
+                    
+                    resultDiv.fadeIn(400);
+                }, 800); // Delay for better UX
+            },
+            error: function(xhr, status, error) {
+                setTimeout(function() {
+                    progressBar.fadeOut(200);
+                    
+                    var errorMessage = $t('Connection error occurred');
+                    if (status === 'timeout') {
+                        errorMessage = $t('Request timed out. Please check your SMTP configuration.');
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    
+                    showErrorMessage(errorMessage);
+                    resultDiv.fadeIn(400);
+                }, 800);
+            },
+            complete: function() {
+                setTimeout(function() {
+                    button.prop('disabled', false)
+                          .removeClass('loading')
+                          .html(originalButtonHtml);
+                    
+                    $('.smtp-test-email-container').removeClass('sending');
+                }, 1000);
+            }
+        });
+        
+        return false;
+    };
+    
+    function showSuccessMessage(email) {
+        var messageDiv = $('#test_email_message');
+        var successHtml = 
+            '<div class="message message-success">' +
+                '<div class="message-icon">🎉</div>' +
+                '<div class="message-content">' +
+                    '<h4>' + $t('Success!') + '</h4>' +
+                    '<p>' + $t('Test email sent successfully to %1!').replace('%1', '<strong>' + email + '</strong>') + '</p>' +
+                    '<small>' + $t('Please check your inbox and spam folder.') + '</small>' +
+                '</div>' +
+            '</div>';
+        
+        messageDiv.html(successHtml);
+        
+        // Add celebration particles
+        setTimeout(function() {
+            addCelebrationParticles();
+        }, 300);
+    }
+    
+    function showErrorMessage(error) {
+        var messageDiv = $('#test_email_message');
+        var errorHtml = 
+            '<div class="message message-error">' +
+                '<div class="message-icon">💥</div>' +
+                '<div class="message-content">' +
+                    '<h4>' + $t('Oops! Something went wrong') + '</h4>' +
+                    '<p>' + $t('Failed to send test email:') + '</p>' +
+                    '<strong>' + error + '</strong>' +
+                '</div>' +
+            '</div>';
+        
+        messageDiv.html(errorHtml);
+        
+        // Add shake effect
+        setTimeout(function() {
+            messageDiv.find('.message').addClass('shake-animation');
+        }, 100);
+    }
+    
+    function showFancyError(message) {
+        var emailField = $('#test_email_address');
+        var wrapper = emailField.closest('.smtp-input-wrapper');
+        
+        wrapper.addClass('error-shake');
+        emailField.addClass('error-state');
+        
+        // Remove existing error message
+        wrapper.find('.fancy-error').remove();
+        
+        // Add fancy error message
+        wrapper.after('<div class="fancy-error">' + 
+            '<span class="error-icon">⚠️</span>' + message + 
+            '</div>');
+        
+        // Remove error styling after user starts typing
+        emailField.one('input', function() {
+            wrapper.removeClass('error-shake');
+            emailField.removeClass('error-state');
+            wrapper.siblings('.fancy-error').fadeOut(200, function() {
+                $(this).remove();
+            });
+        });
+        
+        // Auto remove after 5 seconds
+        setTimeout(function() {
+            wrapper.removeClass('error-shake');
+            emailField.removeClass('error-state');
+            wrapper.siblings('.fancy-error').fadeOut(200, function() {
+                $(this).remove();
+            });
+        }, 5000);
+    }
+    
+    function addCelebrationParticles() {
+        var container = $('.smtp-test-email-container');
+        
+        for (var i = 0; i < 10; i++) {
+            var particle = $('<div class="celebration-particle">🎊</div>');
+            particle.css({
+                position: 'absolute',
+                left: Math.random() * 100 + '%',
+                top: '50%',
+                fontSize: '20px',
+                zIndex: 1000,
+                pointerEvents: 'none',
+                animation: 'celebrationFloat ' + (2 + Math.random() * 2) + 's ease-out forwards'
+            });
+            
+            container.append(particle);
+            
+            setTimeout(function() {
+                particle.remove();
+            }, 4000);
+        }
+    }
+});
+
+// Add additional CSS for new animations
+$('<style>').text(`
+    /* Provider Selection Confirmation */
+    .provider-confirmation {
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: linear-gradient(135deg, #10b981, #34d399);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .provider-confirmation.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    
+    .confirmation-icon {
+        font-size: 12px;
+        animation: confirmationPulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes confirmationPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+    
+    /* Provider Card Animations */
+    @keyframes providerSlideIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.8); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+    }
+    
+    .provider-card.selected {
+        transform: translateY(-12px) scale(1.08) !important;
+        border-color: #667eea !important;
+        box-shadow: 
+            0 25px 50px rgba(102, 126, 234, 0.4),
+            0 12px 20px rgba(0, 0, 0, 0.15) !important;
+        z-index: 10;
+    }
+    
+    .provider-card.selected::before {
+        opacity: 1 !important;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)) !important;
+    }
+    
+    /* Provider Tooltip */
+    .provider-tooltip {
+        position: absolute;
+        bottom: -45px;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .provider-tooltip.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    
+    .tooltip-arrow {
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 4px solid rgba(0, 0, 0, 0.9);
+    }
+    
+    /* Provider Info Popup */
+    .provider-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .provider-popup.show {
+        opacity: 1;
+    }
+    
+    .popup-content {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        transform: scale(0.8) translateY(30px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .provider-popup.show .popup-content {
+        transform: scale(1) translateY(0);
+    }
+    
+    .popup-content h4 {
+        margin: 0 0 16px 0;
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .popup-content p {
+        margin: 0 0 20px 0;
+        color: #6b7280;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+    
+    .popup-features {
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #374151;
+    }
+    
+    .popup-close {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .popup-close:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    /* Responsive Provider Grid */
+    @media (max-width: 768px) {
+        .providers-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .provider-card {
+            padding: 16px 12px;
+        }
+        
+        .provider-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .provider-name {
+            font-size: 12px;
+        }
+        
+        .popup-content {
+            padding: 24px;
+            margin: 20px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .providers-grid {
+            grid-template-columns: 1fr;
+            max-width: 300px;
+        }
+    }
+    
+    .smtp-input-wrapper.focused {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2) !important;
+    }
+    
+    .smtp-input-wrapper.valid .smtp-input-focus-line {
+        background: linear-gradient(90deg, #10b981, #34d399) !important;
+    }
+    
+    .smtp-input-wrapper.invalid .smtp-input-focus-line {
+        background: linear-gradient(90deg, #ef4444, #f87171) !important;
+    }
+    
+    .smtp-test-email-container.sending {
+        animation: containerPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes containerPulse {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-2px) scale(1.01); }
+    }
+    
+    .smtp-send-button.loading {
+        background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%) !important;
+        animation: buttonPulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes buttonPulse {
+        0%, 100% { box-shadow: 0 4px 8px rgba(156, 163, 175, 0.3); }
+        50% { box-shadow: 0 8px 16px rgba(156, 163, 175, 0.5); }
+    }
+    
+    .loading-spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: #ffffff;
+        animation: spinFancy 1s linear infinite;
+        margin-right: 8px;
+    }
+    
+    @keyframes spinFancy {
+        to { transform: rotate(360deg); }
+    }
+    
+    .message-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        animation: iconBounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    @keyframes iconBounceIn {
+        0% { transform: scale(0) rotate(180deg); opacity: 0; }
+        50% { transform: scale(1.2) rotate(90deg); opacity: 0.8; }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    .message-content h4 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    
+    .message-content p {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+    }
+    
+    .error-shake {
+        animation: inputShake 0.6s ease-in-out;
+    }
+    
+    @keyframes inputShake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .fancy-error {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid #fecaca;
+        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+        animation: errorSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes errorSlideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .error-icon {
+        font-size: 16px;
+        animation: iconWiggle 0.8s ease-in-out infinite;
+    }
+    
+    @keyframes iconWiggle {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-10deg); }
+        75% { transform: rotate(10deg); }
+    }
+    
+    .shake-animation {
+        animation: resultShake 0.5s ease-in-out;
+    }
+    
+    @keyframes resultShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-3px); }
+        75% { transform: translateX(3px); }
+    }
+    
+    @keyframes celebrationFloat {
+        0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+        100% { transform: translateY(-200px) rotate(720deg) scale(0.3); opacity: 0; }
+    }
+`).appendTo('head');
+</script>

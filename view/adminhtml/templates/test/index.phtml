@@ -1,0 +1,534 @@
+<?php
+/**
+ * @var \Corals\SMTP\Block\Adminhtml\Test\Index $block
+ */
+?>
+<div class="smtp-test-container">
+    <!-- Test Email Header -->
+    <div class="test-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1><?= $block->escapeHtml(__('Test Email Configuration')) ?></h1>
+                <p><?= $block->escapeHtml(__('Send a test email to verify your SMTP configuration is working correctly.')) ?></p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="<?= $block->escapeUrl($block->getConfigUrl()) ?>" class="action-button primary">
+                <span class="button-icon">⚙️</span>
+                <span><?= $block->escapeHtml(__('Configuration')) ?></span>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getDashboardUrl()) ?>" class="action-button secondary">
+                <span class="button-icon">📊</span>
+                <span><?= $block->escapeHtml(__('Dashboard')) ?></span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Current Configuration Info -->
+    <div class="smtp-config-info">
+        <h4 class="config-title"><?= $block->escapeHtml(__('Current SMTP Configuration')) ?></h4>
+        <div class="config-details">
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('Status:')) ?></span>
+                <span class="config-value <?= $block->isSmtpEnabled() ? 'enabled' : 'disabled' ?>">
+                    <?= $block->isSmtpEnabled() ? '✅ ' . $block->escapeHtml(__('Enabled')) : '❌ ' . $block->escapeHtml(__('Disabled')) ?>
+                </span>
+            </div>
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('Provider:')) ?></span>
+                <span class="config-value"><?= $block->escapeHtml($block->getProviderDisplayName()) ?></span>
+            </div>
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('SMTP Host:')) ?></span>
+                <span class="config-value"><?= $block->escapeHtml($block->getSmtpHost()) ?></span>
+            </div>
+            <div class="config-item">
+                <span class="config-label"><?= $block->escapeHtml(__('SMTP Port:')) ?></span>
+                <span class="config-value"><?= $block->escapeHtml($block->getSmtpPort()) ?></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Email Form -->
+    <div class="test-email-form">
+        <h4 class="form-title"><?= $block->escapeHtml(__('Send Test Email')) ?></h4>
+        
+        <div class="email-input-group">
+            <label for="test_email_address" class="input-label">
+                <?= $block->escapeHtml(__('Email Address')) ?>
+            </label>
+            <input 
+                type="email" 
+                id="test_email_address" 
+                name="test_email" 
+                placeholder="<?= $block->escapeHtml(__('Enter your email address...')) ?>"
+                class="email-input"
+                required
+            />
+            <div class="input-help">
+                <?= $block->escapeHtml(__('Enter the email address where you want to receive the test email.')) ?>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button 
+                type="button" 
+                id="send_test_email" 
+                class="test-button primary"
+                onclick="sendTestEmail()"
+            >
+                <span class="button-icon">🚀</span>
+                <span class="button-text"><?= $block->escapeHtml(__('Send Test Email')) ?></span>
+                <span class="loading-spinner" style="display: none;">⏳</span>
+            </button>
+        </div>
+
+        <div id="test_result" class="test-result" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+require(['jquery'], function($) {
+    window.sendTestEmail = function() {
+        var emailInput = $('#test_email_address');
+        var button = $('#send_test_email');
+        var buttonText = button.find('.button-text');
+        var buttonIcon = button.find('.button-icon');
+        var spinner = button.find('.loading-spinner');
+        var resultDiv = $('#test_result');
+        
+        var email = emailInput.val().trim();
+        
+        if (!email) {
+            showResult('error', '<?= $block->escapeJs(__('Please enter an email address.')) ?>');
+            return;
+        }
+        
+        if (!validateEmail(email)) {
+            showResult('error', '<?= $block->escapeJs(__('Please enter a valid email address.')) ?>');
+            return;
+        }
+        
+        // Show loading state
+        button.prop('disabled', true);
+        buttonText.hide();
+        buttonIcon.hide();
+        spinner.show();
+        resultDiv.hide();
+        
+        $.ajax({
+            url: '<?= $block->escapeUrl($block->getTestEmailUrl()) ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                test_email: email,
+                form_key: window.FORM_KEY
+            },
+            success: function(response) {
+                if (response.success) {
+                    showResult('success', response.message);
+                } else {
+                    var errorMessage = response.message;
+                    // Add technical details toggle if available
+                    if (response.technical_details && response.technical_details !== response.message) {
+                        errorMessage += '<div style="margin-top: 15px;">';
+                        errorMessage += '<button type="button" onclick="toggleTechnicalDetails()" class="toggle-details-btn">';
+                        errorMessage += '🔧 Show Technical Details';
+                        errorMessage += '</button>';
+                        errorMessage += '<div id="technical-details" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-left: 3px solid #dc3545; font-family: monospace; font-size: 12px; white-space: pre-wrap;">';
+                        errorMessage += response.technical_details;
+                        errorMessage += '</div>';
+                        errorMessage += '</div>';
+                    }
+                    showResult('error', errorMessage);
+                }
+            },
+            error: function(xhr, status, error) {
+                var errorMsg = '❌ Communication error occurred. ';
+                if (xhr.status === 404) {
+                    errorMsg += 'Test email endpoint not found.';
+                } else if (xhr.status === 500) {
+                    errorMsg += 'Server error - please check logs.';
+                } else if (xhr.status === 403) {
+                    errorMsg += 'Access denied - please check permissions.';
+                } else {
+                    errorMsg += 'Please check your connection and try again.';
+                }
+                showResult('error', errorMsg);
+            },
+            complete: function() {
+                // Hide loading state
+                button.prop('disabled', false);
+                buttonText.show();
+                buttonIcon.show();
+                spinner.hide();
+            }
+        });
+    };
+    
+    function showResult(type, message) {
+        var resultDiv = $('#test_result');
+        resultDiv.removeClass('success error').addClass(type);
+        resultDiv.html(message);
+        resultDiv.show();
+        
+        // Auto-hide success messages after 5 seconds
+        if (type === 'success') {
+            setTimeout(function() {
+                resultDiv.fadeOut();
+            }, 5000);
+        }
+    }
+    
+    function validateEmail(email) {
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    // Allow enter key to send test email
+    $('#test_email_address').on('keypress', function(e) {
+        if (e.which === 13) {
+            sendTestEmail();
+        }
+    });
+    
+    // Toggle technical details function (global scope)
+    window.toggleTechnicalDetails = function() {
+        var detailsDiv = $('#technical-details');
+        var button = $('.toggle-details-btn');
+        
+        if (detailsDiv.is(':visible')) {
+            detailsDiv.slideUp();
+            button.html('🔧 Show Technical Details');
+        } else {
+            detailsDiv.slideDown();
+            button.html('🔧 Hide Technical Details');
+        }
+    };
+});
+</script>
+
+<style>
+/* SMTP Test Email Styles */
+.smtp-test-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 24px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Test Header */
+.test-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 32px;
+    color: white;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.header-icon svg {
+    color: white;
+}
+
+.header-text h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.header-text p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 16px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.action-button.primary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.action-button.secondary {
+    background: white;
+    color: #667eea;
+    border: 1px solid transparent;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Configuration Info */
+.smtp-config-info {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.config-title {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-title:before {
+    content: "ℹ️";
+    font-size: 20px;
+}
+
+.config-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.config-label {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.config-value {
+    font-weight: 600;
+    color: #111827;
+}
+
+.config-value.enabled {
+    color: #10b981;
+}
+
+.config-value.disabled {
+    color: #ef4444;
+}
+
+/* Test Form */
+.test-email-form {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+    margin: 0 0 24px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-title:before {
+    content: "📧";
+    font-size: 24px;
+}
+
+.email-input-group {
+    margin-bottom: 24px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+}
+
+.email-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+.email-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-help {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.form-actions {
+    text-align: center;
+}
+
+.test-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.test-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.test-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.button-icon {
+    font-size: 18px;
+}
+
+.loading-spinner {
+    font-size: 18px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Test Result */
+.test-result {
+    margin-top: 24px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.test-result.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.test-result.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+/* Technical Details Toggle */
+.toggle-details-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.toggle-details-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .smtp-test-container {
+        padding: 16px;
+    }
+    
+    .test-header {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-actions {
+        justify-content: center;
+    }
+    
+    .config-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .config-item {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
+</style>
